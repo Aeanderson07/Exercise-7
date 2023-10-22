@@ -44,6 +44,11 @@ pairs(deer[,3:7], lower.panel = NULL)
 correlation.matrix <- cor(deer[,3:7])
 correlation.matrix
 ```
+
+```{r colinearity 2}
+performance::check_collinearity(model_deer1)
+```
+
 ```{r remove nas}
 options(na.action = "na.fail")
 ```
@@ -70,6 +75,20 @@ dredge_deer
 ```
 
 ```{r first subset}
-subset(dredge_deer, delta <5)
+subset(dredge_deer, delta <2)
+```
+
+```{r weighting}
+sw(dredge_deer)
+```
+```{r summary}
+summary(model.avg(dredge_deer, subset = delta < 2))
+```
+
+```{r last plot}
+SAp<- ggplot(deer, aes( Surface..ha., Density, colour = Wood_percentage)) + 
+  geom_point(size=3) +
+  geom_smooth(method="lm")
+SAp
 ```
 
