@@ -23,41 +23,45 @@ library(MuMIn)
 library(olsrr)
 ```
 
-## R Markdown
+## Roe Deer Habitat Selection
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+![](images/young-roe-deer-running-summer-raindrops-solitary-male-capreolus-action-grassy-meadow-covered-rain-cute-163306928.webp)
 
 ```{r deer upload}
 deer<-read.csv("Drive_counts.csv")
 ```
 
-## Including Plots
+## Investigating the Colinearity
 
 You can also embed plots, for example:
 
 ```{r colinear check}
 pairs(deer[,3:7], lower.panel = NULL)
 ```
+
 ```{R Corr Matrix}
 correlation.matrix <- cor(deer[,3:7])
 correlation.matrix
+```
+
+```{}
+```
+
+```{r remove nas, include=FALSE}
+options(na.action = "na.fail")
+```
+
+## The Model
+
+```{r Model run}
+model_deer1 <- lm(Density ~ Surface..ha. + Buffered_surface..Mq. + Wooded_buffered_surface..Mq. + Wood_percentage + Weighted_surface..ha., data=deer)
+anova (model_deer1)
 ```
 
 ```{r colinearity 2}
 performance::check_collinearity(model_deer1)
 ```
 
-```{r remove nas}
-options(na.action = "na.fail")
-```
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-
-```{r Model run}
-model_deer1 <- lm(Density ~ Surface..ha. + Buffered_surface..Mq. + Wooded_buffered_surface..Mq. + Wood_percentage + Weighted_surface..ha., data=deer)
-anova (model_deer1)
-```
 ```{r plots}
 olsrr::ols_plot_added_variable(model_deer1)
 ```
@@ -65,7 +69,6 @@ olsrr::ols_plot_added_variable(model_deer1)
 ```{r model fit check}
 performance::check_model(model_deer1)
 ```
-
 
 ```{r AIC}
 options(na.action = "na.fail")
@@ -81,6 +84,7 @@ subset(dredge_deer, delta <2)
 ```{r weighting}
 sw(dredge_deer)
 ```
+
 ```{r summary}
 summary(model.avg(dredge_deer, subset = delta < 2))
 ```
@@ -91,4 +95,3 @@ SAp<- ggplot(deer, aes( Surface..ha., Density, colour = Wood_percentage)) +
   geom_smooth(method="lm")
 SAp
 ```
-
