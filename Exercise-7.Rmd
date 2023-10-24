@@ -44,9 +44,6 @@ correlation.matrix <- cor(deer[,3:7])
 correlation.matrix
 ```
 
-```{}
-```
-
 ```{r remove nas, include=FALSE}
 options(na.action = "na.fail")
 ```
@@ -54,7 +51,7 @@ options(na.action = "na.fail")
 ## The Model
 
 ```{r Model run}
-model_deer1 <- lm(Density ~ Surface..ha. + Buffered_surface..Mq. + Wooded_buffered_surface..Mq. + Wood_percentage + Weighted_surface..ha., data=deer)
+model_deer1 <- lm(Density ~ Vegetated.Surface + Buffered.zone + Wooded_Zone + Wooded_percentage + Weighted_surface..ha., data=deer)
 anova (model_deer1)
 ```
 
@@ -66,7 +63,7 @@ performance::check_collinearity(model_deer1)
 olsrr::ols_plot_added_variable(model_deer1)
 ```
 
-```{r model fit check}
+```{r model fit check, fig.height=7, fig.width=10}
 performance::check_model(model_deer1)
 ```
 
@@ -90,7 +87,7 @@ summary(model.avg(dredge_deer, subset = delta < 2))
 ```
 
 ```{r last plot}
-SAp<- ggplot(deer, aes( Surface..ha., Density, colour = Wood_percentage)) + 
+SAp<- ggplot(deer, aes( Vegetated.Surface, Density, colour = Wooded_percentage)) + 
   geom_point(size=3) +
   geom_smooth(method="lm")
 SAp
